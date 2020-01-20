@@ -1,46 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
+import 'package:world_time/services/world_time.dart';
 
 class Loading extends StatefulWidget {
   @override
   _LoadingState createState() => _LoadingState();
 }
 
-//git test
 class _LoadingState extends State<Loading> {
-  void getTime() async {
-    //Make the request
-    Response response = await get('http://worldtimeapi.org/api/timezone/Europe/London');
-    Map data = jsonDecode(response.body);
-
-    //print(data);
-
-    //get properties from data
-    String dateTime = data['datetime'];
-    String offset = data['utc_offset'];
-    //print(dateTime);
-    //print(offset);
-
-    //create datetime object
-    DateTime now = DateTime.parse(dateTime);
-    now = now.add(Duration(hours: int.parse(offset.substring(1,3))));
-    print(now);
+  String time = 'loading';
+  void setupWorldTime() async{
+    WorldTime instance = WorldTime(location: 'Berlin', flag: 'germany.png', url: 'Europe/Berlin');
+    await instance.getTime();
+    print(instance.time);
+    setState(() {
+      time = instance.time;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    getTime();
-    //print('hello world!');
-
-
+    setupWorldTime();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('loading screen'),
+      body: Padding(
+        padding: EdgeInsets.all(50.0),
+        child: Text(time),
+      ),
     );
   }
 }
