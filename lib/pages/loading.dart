@@ -7,6 +7,7 @@ class Loading extends StatefulWidget {
   _LoadingState createState() => _LoadingState();
 }
 
+//git test
 class _LoadingState extends State<Loading> {
   void getTime() async {
     //Make the request
